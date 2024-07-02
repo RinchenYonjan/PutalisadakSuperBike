@@ -32,6 +32,7 @@ public class BinarySearchAlgorithm {
         return -1;
     }
 
+    
     public int searchInt(int[] arr, int low, int high, int searchKey){
         if(high>=low){
             int mid = (low + high)/2;

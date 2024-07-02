@@ -4,6 +4,9 @@
  */
 package com.putalisadaksuperbike.view;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
@@ -29,7 +32,7 @@ import com.putalisadaksuperbike.model.BikeModel;
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+  
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -69,6 +72,7 @@ import com.putalisadaksuperbike.model.BikeModel;
                 {"3", "MT-09", "Yamaha", "Japan", "198.3 kmph", "14 liters", "19 kmpl"},
                 {"4", "KTM 390", "KTM", "Austrian", "167 kmph", "15 liters", "35 kmpl"},
                 {"5", "NS 200", "Pulsar", "Indian", "125 kmph", "12 liters", "40 kmpl"}
+                
             },
             new String [] {
                 "Serial Number", "Name", "Company", "Country", "Top Speed", "Fuel Capacity", "Mileage"
@@ -307,9 +311,12 @@ import com.putalisadaksuperbike.model.BikeModel;
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void desending_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desending_btnActionPerformed
+    
+    
+    // Method to desending data
+    private void desending_btnActionPerformed(java.awt.event.ActionEvent evt) {
   
         if(descending == false)
         {
@@ -354,11 +361,14 @@ import com.putalisadaksuperbike.model.BikeModel;
            model.setValueAt(fuelcapacity[j], sorted[j]-1, 5);
            model.setValueAt(mileage[j], sorted[j]-1, 6);
 
-       }
-       descending = true;
         }
-    }//GEN-LAST:event_desending_btnActionPerformed
+       descending = true;
+       }
+    }
 
+    
+    
+    // Method to ascending data
     private void ascending_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ascending_btnActionPerformed
 
         if(descending == true)
@@ -399,20 +409,23 @@ import com.putalisadaksuperbike.model.BikeModel;
            model.setValueAt(fuelcapacity[decrease], sorted[j] -1, 5);
            model.setValueAt(mileage[decrease], sorted[j] -1, 6);
            decrease--;
-        }
-           descending = false;
+       }
+       descending = false;
      }
-    }//GEN-LAST:event_ascending_btnActionPerformed
-
+   }
+    
+    
+    
+    // Method to update data
     private void update_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_btnActionPerformed
         
         if(serialnumber_txtfield.getText().isEmpty() || name_txtfield.getText().isEmpty() || company_txtfield.getText().isEmpty() || country_txtfield.getText().isEmpty() || topspeed_txtfield.getText().isEmpty() || fuelcapacity_txtfield.getText().isEmpty() || mileage_txtfield.getText().isEmpty()){
             
-            JOptionPane.showMessageDialog(null, "TextFields are Empty. Please Fill It!");
+            JOptionPane.showMessageDialog(null, "Fields are Empty. Please Fill it!");
             
         }else{
             
-             DefaultTableModel model = (DefaultTableModel)sortTable.getModel();  
+            DefaultTableModel model = (DefaultTableModel)sortTable.getModel();  
             int column = model.getColumnCount();    
             int serialnumber = Integer.parseInt((String)serialnumber_txtfield.getText()) - 1;      
             
@@ -426,178 +439,209 @@ import com.putalisadaksuperbike.model.BikeModel;
             
             }
    
-    }//GEN-LAST:event_update_btnActionPerformed
+    }
 
+    
+    
+    //Method to delete data
     private void delete_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_btnActionPerformed
         
          if(serialnumber_txtfield.getText().isEmpty()){
             
-            JOptionPane.showMessageDialog(null, "TextFields are Empty. Please Fill It!");
+            JOptionPane.showMessageDialog(null, "Fields are Empty. Please Fill It!");
             
         }else{
             
             DefaultTableModel model = (DefaultTableModel)sortTable.getModel();
             int serialnumber = Integer.parseInt((String)serialnumber_txtfield.getText()) - 1;     
         
-        model.removeRow(serialnumber);
+            model.removeRow(serialnumber);
         } 
         
-    }//GEN-LAST:event_delete_btnActionPerformed
-
+    }
+    
+    
+    
+    // Method to add data
     private void add_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_btnActionPerformed
         
         if(serialnumber_txtfield.getText().isEmpty() || name_txtfield.getText().isEmpty() || company_txtfield.getText().isEmpty() || country_txtfield.getText().isEmpty() || topspeed_txtfield.getText().isEmpty() || fuelcapacity_txtfield.getText().isEmpty() || mileage_txtfield.getText().isEmpty()){
             
-            JOptionPane.showMessageDialog(null, "TextFields are Empty. Please Fill It!");
+            JOptionPane.showMessageDialog(null, "Fields are Empty. Please Fill It!");
             
         }else{
             
             try{
                 
-                int serial_number = Integer.parseInt((String)serialnumber_txtfield.getText()); 
+                int serial_number = Integer.parseInt(serialnumber_txtfield.getText().trim()); 
                 
-                if(serial_number > 0 ){
+                if(isSerialNumberExists(serial_number)) {
+                	
+                	JOptionPane.showMessageDialog(null, "Serial number already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                	
+                } else {
+                
+                	if(serial_number > 0 ){
                     
-                    DefaultTableModel model = (DefaultTableModel)sortTable.getModel();
-                    Object[] add = new Object[model.getColumnCount()];
-                    add[0] = serialnumber_txtfield.getText();
-                    add[1] = name_txtfield.getText();
-                    add[2] = company_txtfield.getText();
-                    add[3] = country_txtfield.getText();
-                    add[4] = topspeed_txtfield.getText();
-                    add[5] = fuelcapacity_txtfield.getText();
-                    add[6] = mileage_txtfield.getText();
+                		DefaultTableModel model = (DefaultTableModel)sortTable.getModel();
+                		Object[] add = new Object[model.getColumnCount()];
+          
+                		add[0] = serial_number;
+                		add[1] = CapitalizeFirstLetter(name_txtfield.getText().trim());
+                		add[2] = CapitalizeFirstLetter(company_txtfield.getText().trim());
+                		add[3] = CapitalizeFirstLetter(country_txtfield.getText().trim());
+                		add[4] = CapitalizeFirstLetter(topspeed_txtfield.getText().trim()) + " kmph";
+                		add[5] = CapitalizeFirstLetter(fuelcapacity_txtfield.getText().trim()) + " liters";
+                		add[6] = CapitalizeFirstLetter(mileage_txtfield.getText().trim()) + " kmpl";
         
-                    model.addRow(add);
-                }     
+                		model.addRow(add);
+                    
+                		serial_number++;
+                    
+                		JOptionPane.showMessageDialog(null, "Value is added successfully!");
+                	}
+                	
+               }
                 
             }catch(NumberFormatException a){
                 
-                JOptionPane.showMessageDialog(null, "Cannot input String value!");
+                JOptionPane.showMessageDialog(null, "Cannot input String value!", "Error", JOptionPane.ERROR_MESSAGE);
                 
             }
-           
+            
         } 
-    }//GEN-LAST:event_add_btnActionPerformed
-
+    }
+        
+    
+    
+        // Method to check if the serial number already exists in the table
+    	private boolean isSerialNumberExists(int serial_number) {
+            DefaultTableModel model = (DefaultTableModel) sortTable.getModel();    
+            for (int i = 0; i < model.getRowCount(); i++) {
+            	try {
+            		String value = model.getValueAt(i, 0).toString();
+            		int existingSerialNumber = Integer.parseInt(value);
+            		
+            		if (existingSerialNumber == serial_number) {
+            			return true;
+            		}
+                
+            	} catch(NumberFormatException e) {
+            		System.err.println("Error parsing serial number: " + e.getMessage());
+            	}
+            }
+            return false;
+        }    
+           
+       
+       
+    //Method to captilize first letter
+    public static String CapitalizeFirstLetter(String input) {
+    	if(input == null || input.isEmpty()) {
+    		return input;
+    	}
+    	
+    	String firstchar = input.substring(0, 1).toUpperCase();
+    	String restofchar = input.substring(1).toLowerCase();
+    	
+    	return firstchar + restofchar;
+   
+    }
+    
+    
+    
+    // Method to Search Data
     private void search_BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_BtnActionPerformed
-        
-        if(search_txtfield.getText().isEmpty()){
-            
+
+        if (search_txtfield.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "SearchField is Empty. Please Fill It!");
-            
-        }else{
-            
-            String comboBox = (String) search_combobox.getSelectedItem();
-            BinarySearchAlgorithm binarysearch = new BinarySearchAlgorithm();
-        
-        switch(comboBox){
-            
-            case"Serial Number":
-                 //let's input integer value only
-                try{
-                    
-                    int serial_number = Integer.parseInt((String)search_txtfield.getText());
-                   
-                if(serial_number > 0 ){
-                     
-                    int increasement = 0;
-                    int[] add_serialnumber = new int[bikelist.size()];
-                
-                    for(BikeModel arrayloop : bikelist){
-                    add_serialnumber[increasement] = arrayloop.getserial_number();
-                    increasement++;
-                    }
-                
-                        try{
-                    
-                            binarysearch.searchInt(add_serialnumber, 0, add_serialnumber.length, serial_number);
-                            JOptionPane.showMessageDialog(null, "Bike Serial Number is Found!");
-                    
-                        }catch(IndexOutOfBoundsException  a){
-                    
-                            JOptionPane.showMessageDialog(null, "Bike Serial Number cannot be Found!");
-
-                        }
-                        
-                    } 
-                    
-                }catch(NumberFormatException a){
-                    
-                    JOptionPane.showMessageDialog(null, "Cannot input String value!");
-                    
-                }
-                break; 
-            
-            
-            case"Name":
-                
-                try{
-                    
-                    int name = Integer.parseInt((String)search_txtfield.getText());
-                    JOptionPane.showMessageDialog(null, "Cannot input Integer value!");
-                    
-                }catch(NumberFormatException a){
-                    
-                    String name = (String)search_txtfield.getText();
-                    int name_increasement = 0;
-                    String[] add_name = new String[bikelist.size()];
-                
-                for(BikeModel arrayloop : bikelist){
-                    add_name[name_increasement] = arrayloop.getname();
-                    name_increasement++;
-                }
-                
-                    try{
-                    
-                        binarysearch.searchString(add_name, 0, add_name.length, name);
-                        JOptionPane.showMessageDialog(null, "Bike Name is Found!");
-                    
-                    }catch(IndexOutOfBoundsException  b){
-                    
-                        JOptionPane.showMessageDialog(null, "Bike Name cannot be Found!");
-
-                    }
-                
-                }
-                break; 
-                
-                
-                case"Country":
-                    
-                    try{
-                        
-                        int name = Integer.parseInt((String)search_txtfield.getText());
-                        JOptionPane.showMessageDialog(null, "Cannot input Integer value!");
-                    
-                    }catch(NumberFormatException a){
-                        
-                        String country = (String)search_txtfield.getText();
-                        int country_increasement = 0;
-                        String[] add_country = new String[bikelist.size()];
-                
-                        for(BikeModel arrayloop : bikelist){
-                        add_country[country_increasement] = arrayloop.getname();
-                        country_increasement++;
-                        }
-                
-                            try{
-                    
-                                binarysearch.searchString(add_country, 0, add_country.length, country);
-                                JOptionPane.showMessageDialog(null, "Bike Country is Found");
-                    
-                            }catch(IndexOutOfBoundsException  c){
-                    
-                                JOptionPane.showMessageDialog(null, "Bike Country cannot be Found");
-
-                            }
-                    }
-                
-                    break;     
+            return;
         }
-        }   
-    }//GEN-LAST:event_search_BtnActionPerformed
-     
+
+        String comboBox = (String) search_combobox.getSelectedItem();
+        BinarySearchAlgorithm binarysearch = new BinarySearchAlgorithm();
+
+        switch (comboBox) {
+            case "Serial Number":
+                try {
+                    int serial_number = Integer.parseInt(search_txtfield.getText());
+
+                    if (serial_number > 0) {
+                        int[] serialNumbers = new int[bikelist.size()];
+                        int index = 0;
+
+                        for (BikeModel bike : bikelist) {
+                            serialNumbers[index] = bike.getserial_number();
+                            index++;
+                        }
+
+                        try {
+                            binarysearch.searchInt(serialNumbers, 0, serialNumbers.length, serial_number);
+                            JOptionPane.showMessageDialog(null, "Bike Serial Number is Found!");
+                        } catch (IndexOutOfBoundsException e) {
+                            JOptionPane.showMessageDialog(null, "Bike Serial Number cannot be Found!");
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Cannot input String value!");
+                }
+                break;
+
+            case "Name":
+                try {
+                    Integer.parseInt(search_txtfield.getText());
+                    JOptionPane.showMessageDialog(null, "Cannot input Integer value!");
+                } catch (NumberFormatException e) {
+                    String name = search_txtfield.getText().toLowerCase();
+                    String[] names = new String[bikelist.size()];
+                    int index = 0;
+
+                    for (BikeModel bike : bikelist) {
+                        names[index] = bike.getname().toLowerCase();
+                        index++;
+                    }
+
+                    try {
+                        binarysearch.searchString(names, 0, names.length, name);
+                        JOptionPane.showMessageDialog(null, "Bike Name is Found!");
+                    } catch (IndexOutOfBoundsException e1) {
+                        JOptionPane.showMessageDialog(null, "Bike Name cannot be Found!");
+                    }
+                }
+                break;
+
+            case "Country":
+                try {
+                    Integer.parseInt(search_txtfield.getText());
+                    JOptionPane.showMessageDialog(null, "Cannot input Integer value!");
+                } catch (NumberFormatException e) {
+                    String country = search_txtfield.getText().toLowerCase();
+                    String[] countries = new String[bikelist.size()];
+                    int index = 0;
+
+                    for (BikeModel bike : bikelist) {
+                        countries[index] = bike.getcountry().toLowerCase();
+                        index++;
+                    }
+
+                    try {
+                        binarysearch.searchString(countries, 0, countries.length, country);
+                        JOptionPane.showMessageDialog(null, "Bike Country is Found!");
+                    } catch (IndexOutOfBoundsException e2) {
+                        JOptionPane.showMessageDialog(null, "Bike Country cannot be Found!");
+                    }
+                }
+                break;
+
+            default:
+                JOptionPane.showMessageDialog(null, "Invalid search category selected!");
+                break;
+        }
+    }
+    
+    
+    
+    // Method to collect data
     public static void collected_array(){
      
         DefaultTableModel model = (DefaultTableModel)sortTable.getModel(); 
@@ -615,9 +659,14 @@ import com.putalisadaksuperbike.model.BikeModel;
 
             BikeModel bike_model = new BikeModel(serial_number, name, company, country, topspeed, fuelcapacity, mileage);
             bikelist.add(bike_model);
+            
+            model.addRow(new Object[]{serial_number, name, company, country, topspeed, fuelcapacity, mileage});
         }
     }
+   
     
+    
+    // Main Method 
     public static void main(String args[]) {
        
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -628,6 +677,8 @@ import com.putalisadaksuperbike.model.BikeModel;
         });
     }
  
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add_btn;
     private javax.swing.JButton ascending_btn;

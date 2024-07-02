@@ -36,6 +36,7 @@ public class SelectionSortAlgorithm {
         return array;
     }
     
+    
      public int[] selectionsortdescending(int[] array){
         int size = array.length;
         
@@ -58,4 +59,5 @@ public class SelectionSortAlgorithm {
         }
         return array;
     }
+     
 }

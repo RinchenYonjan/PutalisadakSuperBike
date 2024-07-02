@@ -75,4 +75,5 @@ public class BikeModel {
     public void setmileage(String mileage){
         this.mileage = mileage;
     }
+    
 }
